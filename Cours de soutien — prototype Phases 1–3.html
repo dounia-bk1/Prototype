@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cours de soutien — prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#12284C;--navy2:#0C1B33;--gold:#C9962B;--goldtx:#7A5710;--bg:#EEF0F3;--card:#fff;--ink:#1B2433;--mut:#5B6678;--line:#D9DDE4;
+--pend:#8A5A00;--pendb:#FFF1D0;--ok:#1E6B45;--okb:#DDF2E6;--no:#9B2C2C;--nob:#FBE0E0;--late:#A3350F;--lateb:#FFE3D6;--up:#1F4E96;--upb:#DEE9FA}
+@media (prefers-color-scheme:dark){:root{--bg:#0E1522;--card:#17202F;--ink:#E8ECF3;--mut:#9AA6BA;--line:#2A3548;--goldtx:#E3B552;--navy:#2A4A82;--pendb:#3A2E10;--pend:#F0C060;--okb:#143324;--ok:#7BD8A4;--nob:#3A1818;--no:#F29B9B;--lateb:#3A1D10;--late:#F5A27F;--upb:#15294A;--up:#9CC0F5}}
+*{box-sizing:border-box}html,body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.55 'Readex Pro',system-ui,sans-serif}
+button{font:inherit;cursor:pointer;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:0 16px}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn{background:var(--gold);color:#1B1400;border-color:var(--gold);font-weight:600}
+.btn.sec{background:transparent;color:inherit;border-color:currentColor}
+.wrap{max-width:1040px;margin:auto;padding:0 16px}
+header.top{background:var(--navy2);color:#fff;position:sticky;top:0;z-index:5}
+header .wrap{display:flex;align-items:center;gap:8px;min-height:56px;flex-wrap:wrap;padding-block:6px}
+.logo{font-weight:700;letter-spacing:.2px;border:1.5px dashed var(--gold);padding:2px 10px;border-radius:6px;color:#fff;background:none;min-height:0}
+header nav{display:flex;gap:4px;margin-inline-start:auto;flex-wrap:wrap}
+header button{background:transparent;color:#fff;border-color:transparent;padding:0 10px}
+header button[aria-pressed=true]{border-color:var(--gold);color:var(--gold)}
+.demo{background:#22314E;color:#cfd7e6;font-size:13px}.demo .wrap{display:flex;gap:8px;align-items:center;padding-block:6px;flex-wrap:wrap}
+.demo button{min-height:32px;font-size:13px;background:transparent;color:#fff;border-color:#5b6b8c}.demo button[aria-pressed=true]{background:var(--gold);color:#1B1400;border-color:var(--gold)}
+.hero{background:var(--navy);color:#fff;padding:36px 0 44px}
+.hero h1{font-size:clamp(28px,6vw,48px);line-height:1.2;margin:0 0 12px;font-weight:600;max-width:16em}
+.hero p{max-width:34em;color:#cdd6e6;margin:0 0 20px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.hgrid{display:grid;gap:28px;align-items:center}@media(min-width:800px){.hgrid{grid-template-columns:1.2fr 1fr}}
+.tt{background:var(--navy2);border:1px solid #34476b;border-radius:14px;padding:14px}
+.tt h3{margin:0 0 8px;font-size:14px;color:#cdd6e6;font-weight:500}
+.tt .slot{display:grid;grid-template-columns:54px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid #2b3c5e;font-size:14px}
+.tt .slot b{color:var(--gold)}
+section.sec{padding:28px 0}h2{font-size:22px;margin:0 0 14px;font-weight:600}
+.grid{display:grid;gap:12px}@media(min-width:700px){.grid.c2{grid-template-columns:1fr 1fr}.grid.c3{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card.reg{border-inline-start:5px solid var(--navy)}.card.part{border-inline-start:5px solid var(--gold);background:linear-gradient(var(--card),var(--card))}
+.mut{color:var(--mut);font-size:14px}.gold{color:var(--goldtx);font-weight:600}
+.badge{display:inline-flex;gap:5px;align-items:center;border-radius:99px;padding:1px 10px;font-size:13px;font-weight:500;white-space:nowrap}
+.pending{background:var(--pendb);color:var(--pend)}.approved,.ok{background:var(--okb);color:var(--ok)}.rejected,.full{background:var(--nob);color:var(--no)}.late{background:var(--lateb);color:var(--late)}.upcoming,.open{background:var(--upb);color:var(--up)}.near{background:var(--pendb);color:var(--pend)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}select,input{font:inherit;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 12px;background:var(--card);color:var(--ink);width:100%}
+.filters select{width:auto;min-width:150px}
+label{display:block;margin:10px 0 4px;font-size:14px;font-weight:500}
+[dir=rtl] .arr{display:inline-block;transform:scaleX(-1)}
+.bar{height:8px;border-radius:9px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--navy)}
+.lock{border:1.5px dashed var(--line);border-radius:14px;padding:18px;text-align:center;color:var(--mut)}
+.next{background:var(--navy);color:#fff;border-radius:16px;padding:18px}.next .t{font-size:30px;font-weight:600;line-height:1.1}
+.next .btn{margin-top:12px}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:10px}
+.days button{padding:6px 0;min-height:56px;font-size:13px;line-height:1.3}.days button[aria-pressed=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.dot{display:inline-block;width:6px;height:6px;border-radius:9px;background:var(--gold)}
+.mixed{border-inline-start:3px solid var(--gold);padding:4px 12px;background:var(--bg);border-radius:6px;font-size:14px;margin-top:8px}
+nav.bot{position:fixed;inset:auto 0 0 0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:6}
+nav.bot button{flex:1;border:0;border-radius:0;min-height:56px;font-size:12px;background:transparent}nav.bot button[aria-pressed=true]{color:var(--goldtx);font-weight:700;box-shadow:inset 0 3px 0 var(--gold)}
+.pad{padding-bottom:84px}
+@media(min-width:800px){nav.bot{position:static;border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden}.pad{padding-bottom:24px}}
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.toast{position:fixed;inset-inline:16px;bottom:76px;background:var(--navy2);color:#fff;padding:12px 16px;border-radius:10px;z-index:9;border:1px solid var(--gold)}
+@media(prefers-reduced-motion:no-preference){.card{transition:border-color .15s}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const L={
+fr:{brand:"Nom de l'école",home:"Accueil",cat:"Cours",login:"Connexion",reg:"Créer un compte",dash:"Mon espace",
+h1:"Un cours de soutien sérieux, à distance, avec un suivi réel.",hp:"Séances en direct, supports et exercices au même endroit. Choisissez votre niveau, demandez une place dans un groupe.",
+week:"Cette semaine",feat:"Cours à l'affiche",all:"Tous",lvl:"Niveau",sub:"Matière",Math:"Mathématiques",Phys:"Physique",Fr:"Français",
+regular:"Groupe régulier",part:"Groupe particulier",fees:"Frais",perm:"/ mois",places:"places libres",open:"Places disponibles",near:"Presque complet",full:"Complet",
+request:"Demander l'inscription",obj:"Objectifs",teach:"Enseignant",back:"Retour",fullmsg:"Ce groupe est complet. Vous pouvez quand même envoyer une demande : l'administration décidera.",
+email:"E-mail",pwd:"Mot de passe",forgot:"Mot de passe oublié ?",reset:"Envoyer le lien de réinitialisation",resetok:"Si ce compte existe, un lien vient d'être envoyé par e-mail.",name:"Nom complet",
+sent:"Demande envoyée",pending:"En attente",approved:"Approuvée",rejected:"Refusée",late:"En retard",upcoming:"À venir",cancel:"Annuler la demande",leave:"Demander à quitter le groupe",reason:"Motif :",
+reqs:"Mes demandes",next:"Prochaine séance",join:"Rejoindre",today:"Aujourd'hui",sched:"Planning",ex:"Exercices",prog:"Suivi",nosess:"Aucune séance aujourd'hui. Profitez-en pour revoir le dernier support.",
+mat:"Nouveau support",due:"À rendre",subm:"Rendu",single:"Séance unique autorisée",att:"Présences",pres:"Présent",abs:"Absent",lt:"Retard",exc:"Excusé",score:"Notes",
+wait:"Votre demande est en cours d'examen.",waitp:"Dès son approbation, vos séances, supports et exercices apparaîtront ici.",locked:"Disponible après approbation",
+tmsg:"Contenu rédigé par l'enseignant (non traduit)",mat1:"Chapitre 4 — Suites numériques (PDF)",fb:"Retour de l'enseignant",fbt:"Bon raisonnement, mais n'oubliez pas de justifier la récurrence.",
+days:["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"],demo:"Démo :",d1:"Nouvel élève (en attente)",d2:"Élève approuvé",ok:"Demande envoyée. Statut : en attente.",sess:"Séances",x:"Exercice 3 : suites",y:"Problème de dynamique"},
+en:{brand:"School name",home:"Home",cat:"Courses",login:"Log in",reg:"Create account",dash:"My space",
+h1:"Serious supplementary lessons, online, with real follow-up.",hp:"Live sessions, materials and exercises in one place. Pick your level and request a seat in a group.",
+week:"This week",feat:"Featured courses",all:"All",lvl:"Level",sub:"Subject",Math:"Mathematics",Phys:"Physics",Fr:"French",
+regular:"Regular group",part:"Private group",fees:"Fees",perm:"/ month",places:"seats left",open:"Seats available",near:"Nearly full",full:"Full",
+request:"Request enrollment",obj:"Objectives",teach:"Teacher",back:"Back",fullmsg:"This group is full. You can still send a request; the administration will decide.",
+email:"Email",pwd:"Password",forgot:"Forgot password?",reset:"Send reset link",resetok:"If this account exists, a link has been emailed.",name:"Full name",
+sent:"Request sent",pending:"Pending",approved:"Approved",rejected:"Rejected",late:"Late",upcoming:"Upcoming",cancel:"Cancel request",leave:"Request to leave group",reason:"Reason:",
+reqs:"My requests",next:"Next session",join:"Join",today:"Today",sched:"Schedule",ex:"Exercises",prog:"Progress",nosess:"No session today. A good time to review the latest material.",
+mat:"New material",due:"Due",subm:"Submitted",single:"Single session access",att:"Attendance",pres:"Present",abs:"Absent",lt:"Late",exc:"Excused",score:"Scores",
+wait:"Your request is being reviewed.",waitp:"Once approved, your sessions, materials and exercises will appear here.",locked:"Available after approval",
+tmsg:"Written by the teacher (not translated)",mat1:"Chapitre 4 — Suites numériques (PDF)",fb:"Teacher feedback",fbt:"Bon raisonnement, mais n'oubliez pas de justifier la récurrence.",
+days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],demo:"Demo:",d1:"New student (pending)",d2:"Approved student",ok:"Request sent. Status: pending.",sess:"Sessions",x:"Exercice 3 : suites",y:"Problème de dynamique"},
+ar:{brand:"اسم المدرسة",home:"الرئيسية",cat:"الدروس",login:"تسجيل الدخول",reg:"إنشاء حساب",dash:"فضائي",
+h1:"دروس دعم جادة عن بُعد، مع متابعة حقيقية.",hp:"حصص مباشرة ووثائق وتمارين في مكان واحد. اختر مستواك واطلب مقعدًا في فوج.",
+week:"هذا الأسبوع",feat:"دروس مميزة",all:"الكل",lvl:"المستوى",sub:"المادة",Math:"الرياضيات",Phys:"الفيزياء",Fr:"الفرنسية",
+regular:"فوج عادي",part:"فوج خاص",fees:"الرسوم",perm:"/ شهريًا",places:"مقاعد شاغرة",open:"مقاعد متاحة",near:"شبه مكتمل",full:"مكتمل",
+request:"طلب التسجيل",obj:"الأهداف",teach:"الأستاذ",back:"رجوع",fullmsg:"هذا الفوج مكتمل. يمكنك إرسال طلب وستقرر الإدارة.",
+email:"البريد الإلكتروني",pwd:"كلمة المرور",forgot:"نسيت كلمة المرور؟",reset:"إرسال رابط الاستعادة",resetok:"إذا كان الحساب موجودًا فقد أُرسل رابط إلى بريدك.",name:"الاسم الكامل",
+sent:"تم إرسال الطلب",pending:"قيد الانتظار",approved:"مقبول",rejected:"مرفوض",late:"متأخر",upcoming:"قادم",cancel:"إلغاء الطلب",leave:"طلب مغادرة الفوج",reason:"السبب:",
+reqs:"طلباتي",next:"الحصة القادمة",join:"انضم",today:"اليوم",sched:"الجدول",ex:"التمارين",prog:"المتابعة",nosess:"لا توجد حصة اليوم. فرصة لمراجعة آخر وثيقة.",
+mat:"وثيقة جديدة",due:"آخر أجل",subm:"تم التسليم",single:"حصة واحدة مصرّح بها",att:"الحضور",pres:"حاضر",abs:"غائب",lt:"متأخر",exc:"معذور",score:"النقاط",
+wait:"طلبك قيد المراجعة.",waitp:"بعد القبول ستظهر هنا حصصك ووثائقك وتمارينك.",locked:"متاح بعد القبول",
+tmsg:"نص كتبه الأستاذ (غير مترجم)",mat1:"Chapitre 4 — Suites numériques (PDF)",fb:"ملاحظة الأستاذ",fbt:"Bon raisonnement, mais n'oubliez pas de justifier la récurrence.",
+days:["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"],demo:"عرض:",d1:"طالب جديد (قيد الانتظار)",d2:"طالب مقبول",ok:"تم إرسال الطلب. الحالة: قيد الانتظار.",sess:"الحصص",x:"Exercice 3 : suites",y:"Problème de dynamique"}};
+const G=[
+{id:1,c:"Math",lv:"3AS",type:"regular",days:[0,2],t:"17:00",fee:4500,cap:20,n:12},
+{id:2,c:"Math",lv:"3AS",type:"part",days:[4],t:"18:30",fee:7000,cap:8,n:8},
+{id:3,c:"Phys",lv:"2AS",type:"regular",days:[1,3],t:"16:00",fee:4000,cap:20,n:18},
+{id:4,c:"Phys",lv:"2AS",type:"regular",days:[5],t:"10:00",fee:4000,cap:20,n:6},
+{id:5,c:"Fr",lv:"1AS",type:"regular",days:[2],t:"15:00",fee:3500,cap:25,n:10}];
+const s={lang:'fr',view:'home',lv:'all',sb:'all',g:null,auth:'login',mode:'approved',day:1,tab:'today',toast:'',cancelled:false};
+const t=k=>L[s.lang][k];
+const st=g=>g.n>=g.cap?'full':(g.cap-g.n<=3?'near':'open');
+const ico={pending:'◔',approved:'✓',rejected:'✕',late:'!',upcoming:'›',full:'✕',near:'!',open:'✓',ok:'✓'};
+const badge=(k,txt)=>`<span class="badge ${k}"><span aria-hidden="true">${ico[k]||''}</span>${txt||t(k)}</span>`;
+const arr='<span class="arr" aria-hidden="true">→</span>';
+function go(v,x){s.view=v;if(x)Object.assign(s,x);window.scrollTo(0,0);R()}
+function lang(l){s.lang=l;R()}
+function gcard(g){const q=st(g);return `<div class="card ${g.type==='part'?'part':'reg'}"><div class="row" style="justify-content:space-between"><b>${t(g.c)} · ${g.lv}</b>${badge(q,q==='full'?t('full'):q==='near'?t('near'):t('open'))}</div>
+<div class="mut">${g.type==='part'?'★ ':''}${t(g.type==='part'?'part':'regular')} · ${g.days.map(d=>t('days')[d]).join(' / ')} ${g.t}</div>
+<div style="margin:8px 0"><span class="gold">${g.fee.toLocaleString(s.lang==='ar'?'ar-DZ':s.lang)} DA</span> <span class="mut">${t('perm')}</span> · <span class="mut">${Math.max(0,g.cap-g.n)} ${t('places')}</span></div>
+<button class="btn" onclick="go('group',{g:${g.id}})">${t('request')} ${arr}</button></div>`}
+function home(){const f=G.filter(g=>[1,3,5].includes(g.id));
+return `<div class="hero"><div class="wrap hgrid"><div><h1>${t('h1')}</h1><p>${t('hp')}</p><div class="row"><button class="btn" onclick="go('cat')">${t('cat')} ${arr}</button><button class="btn sec" onclick="go('auth',{auth:'register'})">${t('reg')}</button></div></div>
+<div class="tt" aria-label="${t('week')}"><h3>${t('week')}</h3>${[[0,'Math','3AS','17:00'],[1,'Phys','2AS','16:00'],[2,'Fr','1AS','15:00']].map(r=>`<div class="slot"><b>${t('days')[r[0]]}</b><span>${t(r[1])} ${r[2]}</span><span>${r[3]}</span></div>`).join('')}</div></div></div>
+<section class="sec"><div class="wrap"><h2>${t('feat')}</h2><div class="grid c3">${f.map(gcard).join('')}</div></div></section>`}
+function cat(){const l=['all','1AS','2AS','3AS'],su=['all','Math','Phys','Fr'];
+const list=G.filter(g=>(s.lv==='all'||g.lv===s.lv)&&(s.sb==='all'||g.c===s.sb));
+return `<div class="wrap" style="padding-block:24px"><h2>${t('cat')}</h2><div class="filters"><select aria-label="${t('lvl')}" onchange="s.lv=this.value;R()">${l.map(x=>`<option value="${x}" ${s.lv===x?'selected':''}>${t('lvl')}: ${x==='all'?t('all'):x}</option>`).join('')}</select>
+<select aria-label="${t('sub')}" onchange="s.sb=this.value;R()">${su.map(x=>`<option value="${x}" ${s.sb===x?'selected':''}>${t('sub')}: ${x==='all'?t('all'):t(x)}</option>`).join('')}</select></div>
+<div class="grid c3">${list.map(gcard).join('')||'<div class="lock">—</div>'}</div></div>`}
+function group(){const g=G.find(x=>x.id===s.g),q=st(g);
+return `<div class="wrap" style="padding-block:24px;max-width:680px"><button onclick="go('cat')"><span class="arr">←</span> ${t('back')}</button>
+<h2 style="margin-top:14px">${t(g.c)} · ${g.lv}</h2><div class="card">${gcard({...g}).replace(/<button.*<\/button>/s,'')}
+<p><b>${t('obj')}</b><br><span class="mut">Suites, limites, dérivation, probabilités — préparation au baccalauréat.</span></p><div class="mixed" lang="fr" dir="ltr"><span class="mut">${t('tmsg')}</span><br>« Chaque séance se termine par un exercice type bac. »</div>
+<p class="mut">${t('teach')} : M. Benali</p>${q==='full'?`<p>${badge('full')} ${t('fullmsg')}</p>`:''}
+<button class="btn" onclick="go('auth',{auth:'login',next:'enroll'})">${t('request')} ${arr}</button></div></div>`}
+function auth(){const m=s.auth,f=(k,ty='text')=>`<label>${t(k)}</label><input type="${ty}">`;
+return `<div class="wrap" style="padding-block:28px;max-width:420px"><div class="card"><h2>${m==='register'?t('reg'):m==='forgot'?t('forgot'):t('login')}</h2>
+${m==='register'?f('name'):''}${f('email','email')}${m!=='forgot'?f('pwd','password'):''}
+<div class="row" style="margin-top:16px"><button class="btn" style="flex:1" onclick="${m==='forgot'?"s.toast=t('resetok');R()":"s.mode=s.next==='enroll'?'pending':s.mode;go(s.next||'dash',{next:null})"}">${m==='forgot'?t('reset'):m==='register'?t('reg'):t('login')}</button></div>
+<p class="mut" style="display:flex;justify-content:space-between;gap:8px"><a href="#" onclick="s.auth='forgot';R();return false" style="color:var(--goldtx)">${t('forgot')}</a><a href="#" onclick="s.auth='${m==='register'?'login':'register'}';R();return false" style="color:var(--goldtx)">${m==='register'?t('login'):t('reg')}</a></p></div></div>`}
+const SS=[{d:1,t:"16:00",c:"Phys",l:"2AS",own:1},{d:2,t:"15:00",c:"Fr",l:"1AS",own:0,single:1},{d:0,t:"17:00",c:"Math",l:"3AS",own:1},{d:2,t:"17:00",c:"Math",l:"3AS",own:1}];
+function sessCard(x){return `<div class="card" style="margin-bottom:8px"><div class="row" style="justify-content:space-between"><b>${t(x.c)} ${x.l}</b><span>${t('days')[x.d]} ${x.t}</span></div>${x.single?badge('upcoming',t('single')):''}<div style="margin-top:6px"><button class="btn" ${x.d!==s.day&&false?'disabled':''} onclick="s.toast='Lien externe (Meet) →';R()">${t('join')}</button></div></div>`}
+function lockBox(){return `<div class="lock"><div style="font-size:22px" aria-hidden="true">🔒</div>${t('locked')}</div>`}
+function reqs(){const rows=s.mode==='pending'&&!s.cancelled?[['pending','Math','3AS',0]]:s.mode==='pending'?[]:[['approved','Phys','2AS',0],['pending','Math','3AS',0],['rejected','Fr','1AS',1]];
+return `<h2>${t('reqs')}</h2>${rows.map(r=>`<div class="card" style="margin-bottom:8px"><div class="row" style="justify-content:space-between"><b>${t(r[1])} ${r[2]}</b>${badge(r[0])}</div>
+${r[0]==='pending'?`<button style="margin-top:8px" onclick="s.cancelled=true;R()">${t('cancel')}</button>`:''}${r[0]==='approved'?`<button style="margin-top:8px">${t('leave')}</button>`:''}${r[3]?`<p class="mut">${t('reason')} <span lang="fr" dir="ltr">« Niveau non concerné. »</span></p>`:''}</div>`).join('')}`}
+function dash(){const T=['today','sched','ex','prog','reqs'],lab={today:t('today'),sched:t('sched'),ex:t('ex'),prog:t('prog'),reqs:t('reqs')},ic={today:'●',sched:'▦',ex:'✎',prog:'◔',reqs:'☰'};
+let body;const P=s.mode==='pending';
+if(s.tab==='reqs')body=reqs();
+else if(P)body=`<div class="card" style="text-align:center;padding:24px">${badge('pending')}<h2 style="margin-top:12px">${t('wait')}</h2><p class="mut">${t('waitp')}</p></div><div class="grid c3" style="margin-top:12px">${[t('sess'),t('mat'),t('ex')].map(x=>`<div><b>${x}</b>${lockBox()}</div>`).join('')}</div>`;
+else if(s.tab==='today')body=`<div class="next"><div class="mut" style="color:#cdd6e6">${t('next')}</div><div class="t">16:00</div><div>${t('Phys')} 2AS · ${t('days')[1]}</div><button class="btn" onclick="s.toast='Lien externe (Meet) →';R()">${t('join')} ${arr}</button></div>
+<h2 style="margin-top:20px">${t('ex')}</h2><div class="card" style="margin-bottom:8px"><div class="row" style="justify-content:space-between"><b lang="fr" dir="ltr">${t('x')}</b>${badge('upcoming',t('due')+' · '+t('days')[3])}</div></div>
+<div class="card"><div class="row" style="justify-content:space-between"><b lang="fr" dir="ltr">${t('y')}</b>${badge('late',t('subm')+' · '+t('late'))}</div></div>
+<h2 style="margin-top:20px">${t('mat')}</h2><div class="card"><span lang="fr" dir="ltr">${t('mat1')}</span><div class="mixed mut">${t('tmsg')}</div></div>`;
+else if(s.tab==='sched'){const ds=SS.filter(x=>x.d===s.day);body=`<div class="days">${t('days').map((d,i)=>`<button aria-pressed="${s.day===i}" onclick="s.day=${i};R()">${d.slice(0,3)}<br>${SS.some(x=>x.d===i)?'<span class="dot"></span>':'&nbsp;'}</button>`).join('')}</div>${ds.length?ds.map(sessCard).join(''):`<div class="lock">${t('nosess')}</div>`}`}
+else if(s.tab==='ex')body=`<div class="card" style="margin-bottom:8px"><b lang="fr" dir="ltr">${t('x')}</b><div>${badge('upcoming',t('due')+' · '+t('days')[3])}</div></div><div class="card"><b lang="fr" dir="ltr">${t('y')}</b><div>${badge('late',t('subm')+' · '+t('late'))}</div><div class="mixed" lang="fr" dir="ltr"><span class="mut">${t('fb')}</span><br>${t('fbt')}</div></div>`;
+else body=`<h2>${t('att')}</h2><div class="row" style="margin-bottom:14px">${badge('approved',t('pres')+' 7')}${badge('rejected',t('abs')+' 1')}${badge('late',t('lt')+' 2')}${badge('upcoming',t('exc')+' 1')}</div><div class="bar"><i style="width:82%"></i></div><p class="mut">82 %</p><h2>${t('score')}</h2><div class="card">14,5 / 20 · ${t('Phys')}</div>`;
+return `<div class="wrap pad" style="padding-top:16px"><nav class="bot">${T.map(k=>`<button aria-pressed="${s.tab===k}" onclick="s.tab='${k}';R()"><div aria-hidden="true">${ic[k]}</div>${lab[k]}</button>`).join('')}</nav>${body}</div>`}
+function R(){const d=document.documentElement;d.lang=s.lang;d.dir=s.lang==='ar'?'rtl':'ltr';
+const v={home,cat,group,auth,dash,teach,admin}[s.view]();
+document.getElementById('app').innerHTML=`<header class="top"><div class="wrap"><button class="logo" onclick="go('home')">${t('brand')}</button>
+<nav>${['fr','ar','en'].map(l=>`<button aria-pressed="${s.lang===l}" onclick="lang('${l}')" lang="${l}">${{fr:'FR',ar:'ع',en:'EN'}[l]}</button>`).join('')}</nav></div>
+<div class="wrap" style="min-height:0;padding-block:0 6px"><nav style="margin:0">${[['home',t('home')],['cat',t('cat')],['dash',t('dash')]].map(a=>`<button aria-pressed="${s.view===a[0]}" onclick="go('${a[0]}')">${a[1]}</button>`).join('')}<button onclick="go('auth',{auth:'login'})">${t('login')}</button></nav></div></header>
+<div class="demo"><div class="wrap">${t('demo')} <button aria-pressed="${s.mode==='pending'}" onclick="s.mode='pending';s.cancelled=false;go('dash',{tab:'today'})">${t('d1')}</button><button aria-pressed="${s.mode==='approved'}" onclick="s.mode='approved';go('dash',{tab:'today'})">${t('d2')}</button><button aria-pressed="${s.view==='teach'}" onclick="go('teach')">${tt('role')}</button><button aria-pressed="${s.view==='admin'}" onclick="go('admin')">${ta('adm')}</button></div></div>${v}${s.toast?`<div class="toast" role="status">${s.toast}</div>`:''}`;
+if(s.toast){const m=s.toast;setTimeout(()=>{if(s.toast===m){s.toast='';R()}},2200)}}
+document.head.insertAdjacentHTML('beforeend',`<style>
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px}.tabs button{white-space:nowrap}
+.tw button[aria-pressed=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.two{display:grid;gap:14px;align-items:start}@media(min-width:900px){.two{grid-template-columns:1.1fr 1fr}}
+.chk{display:flex;gap:8px;align-items:center;min-height:44px;flex-wrap:wrap}.chk input{width:20px;min-height:20px;flex:none}
+fieldset{border:1px solid var(--line);border-radius:14px;padding:8px 14px;margin:10px 0}
+.warn{border-inline-start:5px solid var(--pend);background:var(--pendb);color:var(--pend);padding:10px 12px;border-radius:10px;margin:8px 0}
+.block{border:2px solid var(--no);background:var(--nob);color:var(--no);padding:10px 12px;border-radius:10px;font-weight:600;margin:8px 0}
+.sum{border:1.5px solid var(--navy);border-radius:12px;padding:10px 12px;margin:8px 0;background:var(--card)}.sum.bad{border-color:var(--no);border-style:dashed}
+.chip{display:inline-block;background:var(--bg);border-radius:99px;padding:1px 10px;margin:2px;font-size:13px}
+.lrow{border-inline-start:5px solid var(--late)}.tw textarea{font:inherit;width:100%;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--card);color:var(--ink);min-height:70px}
+</style>`);
+const KT='role,tdash,mats,grad,studs,newS,title,day,time,dur,link,rec,once,weekly,daily,who,grp,ind,guest,nobody,stu,block,warn,save,saved,edit,cancel,only,future,notif,cancelled,confirm,pub,pubneed,chk,up,rej,fail,retry,instr,deadline,resp,text,file,quiz,attempts,prev,addq,queue,empty,sc,fb,auto,sv,allp,nosess,wait,todo,groups,avg,rate,aud'.split(',');
+const VT={
+fr:`Enseignant|Tableau de bord|Supports|Correction|Élèves|Nouvelle séance|Titre|Jour|Début|Durée (min)|Lien de réunion|Répétition|Une fois|Chaque semaine|Chaque jour|Qui verra Rejoindre|Groupes entiers|Élèves individuels|invité d'un autre groupe|Personne n'est sélectionné|élèves|Conflit : vous enseignez déjà à cette heure. Enregistrement impossible.|Attention : ces élèves ont déjà une séance à cette heure (autre enseignant). Vous pouvez continuer :|Enregistrer la séance|Enregistré. Notification envoyée (plateforme + e-mail).|Modifier|Annuler cette occurrence|Cette occurrence seulement|Celle-ci et les suivantes|Seront notifiés (plateforme + e-mail) :|annulée|Confirmer|Publier|Choisissez au moins un destinataire.|J'ai vérifié les destinataires|Téléverser|Fichier refusé : type non autorisé (.exe). Formats : PDF, Word, PowerPoint, image, 100 Mo max.|Échec du téléversement. Vérifiez la connexion.|Réessayer|Consignes|Date limite|Type de réponse|Texte|Fichier|Quiz|Tentatives|Aperçu élève|Ajouter une question|File de correction|Rien en attente.|Note /20|Commentaire|Note automatique|Enregistrer la note|Tous présents|Aucune séance ce jour-là.|En attente|Présences à saisir|Mes groupes|Moyenne|Présence|Destinataires`.split('|'),
+en:`Teacher|Dashboard|Materials|Grading|Students|New session|Title|Day|Start|Duration (min)|Meeting link|Repeat|Once|Weekly|Daily|Who will see Join|Whole groups|Individual students|guest from another group|Nobody selected|students|Conflict: you already teach at this time. Saving is blocked.|Heads up: these students already have a session at this time (other teacher). You may continue:|Save session|Saved. Notification sent (platform + email).|Edit|Cancel this occurrence|This occurrence only|This and all future|Will be notified (platform + email):|cancelled|Confirm|Publish|Pick at least one recipient.|I checked the recipients|Upload|File rejected: type not allowed (.exe). Allowed: PDF, Word, PowerPoint, image, 100 MB max.|Upload failed. Check your connection.|Retry|Instructions|Deadline|Response type|Text|File|Quiz|Attempts|Student preview|Add question|Grading queue|Nothing waiting.|Score /20|Feedback|Auto score|Save grade|Mark all present|No session that day.|Waiting|Attendance to record|My groups|Average|Attendance|Recipients`.split('|'),
+ar:`أستاذ|لوحة القيادة|الوثائق|التصحيح|الطلاب|حصة جديدة|العنوان|اليوم|البداية|المدة (دقيقة)|رابط الاجتماع|التكرار|مرة واحدة|أسبوعيًا|يوميًا|من سيرى زر الانضمام|أفواج كاملة|طلاب فرديون|ضيف من فوج آخر|لم يُحدد أحد|طلاب|تعارض: لديك حصة في هذا الوقت. لا يمكن الحفظ.|تنبيه: لدى هؤلاء الطلاب حصة في هذا الوقت (أستاذ آخر). يمكنك المتابعة:|حفظ الحصة|تم الحفظ. أُرسل إشعار (المنصة + البريد).|تعديل|إلغاء هذه الحصة|هذه الحصة فقط|هذه والحصص اللاحقة|سيُشعَر (المنصة + البريد):|ملغاة|تأكيد|نشر|اختر مستلمًا واحدًا على الأقل.|تحققت من المستلمين|رفع|ملف مرفوض: النوع غير مسموح (.exe). المسموح: PDF وWord وPowerPoint وصور، 100 ميغابايت كحد أقصى.|فشل الرفع. تحقق من الاتصال.|إعادة المحاولة|التعليمات|آخر أجل|نوع الإجابة|نص|ملف|اختبار|المحاولات|معاينة الطالب|إضافة سؤال|قائمة التصحيح|لا شيء في الانتظار.|النقطة /20|ملاحظة|النقطة التلقائية|حفظ النقطة|الكل حاضر|لا حصة في هذا اليوم.|في الانتظار|حضور لم يُسجَّل|أفواجي|المعدل|الحضور|المستلمون`.split('|')};
+const tt=k=>VT[s.lang][KT.indexOf(k)]||k;
+const ST=[[1,'Yasmine B.',3],[2,'Amine K.',3],[3,'Lina M.',3],[4,'Karim D.',5],[5,'Sara H.',5],[6,'Nadir R.',1],[7,'Inès T.',2]];
+const gn=id=>{const g=G.find(x=>x.id===id);return t(g.c)+' '+g.lv+(g.type==='part'?' ★':'')};
+const mem=id=>ST.filter(x=>x[2]===id);
+const mn=x=>{const p=x.split(':');return +p[0]*60+ +p[1]};
+const ov=(d1,t1,u1,d2,t2,u2)=>d1==d2&&mn(t1)<mn(t2)+ +u2&&mn(t2)<mn(t1)+ +u1;
+const OB={2:[3,'18:00',60]};
+const Q={tab:'dash',day:1,modal:null,at:{},as:1,sg:3,sel:null,gf:'all',ef:'all',
+dr:{ti:'Séance de révision',d:3,t:'18:00',du:60,rec:'once',g:[3],st:[]},
+TS:[{id:1,ti:'Dynamique : lois de Newton',d:1,t:'16:00',du:90,g:[3],st:[],rec:'weekly',cx:[]},
+{id:2,ti:'Révision : conjugaison',d:2,t:'15:00',du:60,g:[5],st:[1],rec:'once',cx:[]},
+{id:3,ti:'Suites numériques',d:0,t:'17:00',du:90,g:[1],st:[],rec:'weekly',cx:[1]}],
+mat:{g:[],st:[],chk:false,up:'idle'},
+ex:{ti:'Exercice 4 : limites',in:'Calculer les limites suivantes et justifier chaque étape.',g:[3],st:[],ty:['text','quiz'],qs:['Quelle unité mesure une force ?'],att:1},
+sub:[{id:1,ex:'Problème de dynamique',s:1,ty:'file',late:5,v:'dynamique_yasmine.pdf'},{id:2,ex:'Problème de dynamique',s:2,ty:'text',late:0,v:'F = m·a, donc a = 2 m/s².'},{id:3,ex:'Quiz : Newton',s:3,ty:'quiz',late:0,v:14}]};
+const TOAST=m=>{s.toast=m;R()};
+const aud=o=>[...new Set([...o.g.flatMap(g=>mem(g).map(x=>x[0])),...o.st])].map(i=>ST.find(x=>x[0]===i));
+function tg(p,f,id){const a=eval(p)[f],i=a.indexOf(id);i<0?a.push(id):a.splice(i,1);R()}
+const pick=(o,p)=>`<fieldset><legend><b>${tt('aud')}</b></legend><b class="mut">${tt('grp')}</b>${G.map(g=>`<label class="chk"><input type="checkbox" ${o.g.includes(g.id)?'checked':''} onchange="tg('${p}','g',${g.id})">${gn(g.id)}</label>`).join('')}
+<b class="mut">${tt('ind')}</b>${ST.map(x=>`<label class="chk"><input type="checkbox" ${o.st.includes(x[0])?'checked':''} onchange="tg('${p}','st',${x[0]})">${x[1]} <span class="mut">${gn(x[2])}</span>${o.st.includes(x[0])&&!o.g.includes(x[2])?badge('upcoming',tt('guest')):''}</label>`).join('')}</fieldset>`;
+const sum=o=>{const a=aud(o);return `<div class="sum ${a.length?'':'bad'}"><b>${tt('who')} : ${a.length} ${tt('stu')}</b><div>${a.length?a.map(x=>`<span class="chip">${x[1]}${o.g.includes(x[2])?'':' ↗'}</span>`).join(''):'✕ '+tt('nobody')}</div></div>`};
+const wk=()=>`<div class="days">${t('days').map((d,i)=>`<button aria-pressed="${Q.day===i}" onclick="Q.day=${i};R()">${d.slice(0,3)}<br>${Q.TS.some(x=>x.d===i)?'<span class="dot"></span>':'&nbsp;'}</button>`).join('')}</div>`;
+const scT=(x,q)=>{const a=aud(x);return `<div class="card" style="margin-bottom:8px"><div class="row" style="justify-content:space-between"><b lang="fr" dir="ltr">${x.ti}</b>${x.rec!=='once'?badge('upcoming','↻ '+tt(x.rec)):''}</div><div class="mut">${t('days')[x.d]} ${x.t} · ${x.du} min · ${a.length} ${tt('stu')}${a.some(y=>!x.g.includes(y[2]))?' · ↗ '+tt('guest'):''}</div>${x.cx&&x.cx.length?`<div class="mut">${t('days')[x.d]} +1 : ${badge('rejected',tt('cancelled'))}</div>`:''}<div class="row" style="margin-top:8px">${q?`<button class="btn" onclick="TOAST('Meet →')">${t('join')}</button><button onclick="Q.tab='att';Q.as=${x.id};R()">${t('att')}</button>`:`<button onclick="Q.modal={k:'edit',id:${x.id}};R()">${tt('edit')}</button><button onclick="Q.modal={k:'cx',id:${x.id}};R()">${tt('cancel')}</button>`}</div></div>`};
+const modal=()=>{const m=Q.modal;if(!m)return'';const x=Q.TS.find(y=>y.id===m.id),a=aud(x);return `<div class="card" style="border:2px solid var(--gold);margin-bottom:12px"><b lang="fr" dir="ltr">${x.ti}</b>${m.k==='edit'?`<label class="chk"><input type="radio" name="sc" checked>${tt('only')}</label><label class="chk"><input type="radio" name="sc">${tt('future')}</label>`:`<p>${tt('cancel')} (${t('days')[x.d]} +1)</p>`}<p class="mut">${tt('notif')} ${a.map(y=>y[1]).join(', ')}</p><div class="row"><button class="btn" onclick="${m.k==='cx'?`Q.TS.find(y=>y.id==${x.id}).cx=[1];`:''}Q.modal=null;TOAST(tt('saved'))">${tt('confirm')}</button><button onclick="Q.modal=null;R()" aria-label="close">✕</button></div></div>`};
+function pDash(){const ts=Q.TS.filter(x=>x.d===Q.day);return `<div class="two"><div>${wk()}<h2>${t('today')}</h2>${ts.length?ts.map(x=>scT(x,1)).join(''):`<div class="lock">${tt('nosess')}</div>`}</div><div>
+<button class="next" style="width:100%;text-align:start;border:0" onclick="Q.tab='grad';R()"><div class="t">${Q.sub.length}</div>${tt('queue')} ${arr}</button>
+<h2 style="margin-top:16px">${tt('todo')}</h2>${[1,2].map(i=>{const x=Q.TS.find(y=>y.id===i);return `<div class="card row" style="justify-content:space-between;margin-bottom:6px;align-items:center"><span lang="fr" dir="ltr">${x.ti}</span><button onclick="Q.tab='att';Q.as=${i};R()">${t('att')}</button></div>`}).join('')}
+<h2 style="margin-top:16px">${tt('groups')}</h2>${G.map(g=>`<div class="row" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)"><span>${gn(g.id)}</span><span>${g.n}/${g.cap} ${badge(st(g),t(st(g)))}</span></div>`).join('')}</div></div>`}
+function pSess(){const d=Q.dr,a=aud(d),hard=Q.TS.some(x=>ov(x.d,x.t,x.du,d.d,d.t,d.du)),soft=a.filter(x=>OB[x[0]]&&ov(OB[x[0]][0],OB[x[0]][1],OB[x[0]][2],d.d,d.t,d.du));
+return `${modal()}<div class="two"><div><h2>${t('sess')}</h2>${Q.TS.map(x=>scT(x,0)).join('')}</div><div class="card"><h2>${tt('newS')}</h2>
+<label>${tt('title')}</label><input value="${d.ti}" onchange="Q.dr.ti=this.value" lang="fr">
+<div class="row"><div style="flex:1"><label>${tt('day')}</label><select onchange="Q.dr.d=+this.value;R()">${t('days').map((n,i)=>`<option value="${i}" ${d.d===i?'selected':''}>${n}</option>`).join('')}</select></div><div style="flex:1"><label>${tt('time')}</label><input type="time" value="${d.t}" onchange="Q.dr.t=this.value;R()"></div><div style="flex:1"><label>${tt('dur')}</label><input type="number" value="${d.du}" onchange="Q.dr.du=this.value;R()"></div></div>
+<label>${tt('link')}</label><input dir="ltr" value="https://meet.example.com/abc-defg"><label>${tt('rec')}</label><select onchange="Q.dr.rec=this.value">${['once','weekly','daily'].map(k=>`<option value="${k}" ${d.rec===k?'selected':''}>${tt(k)}</option>`).join('')}</select>
+${pick(d,'Q.dr')}${sum(d)}${hard?`<div class="block" role="alert">✕ ${tt('block')}</div>`:''}${soft.length?`<div class="warn" role="status">! ${tt('warn')} ${soft.map(x=>x[1]).join(', ')}</div>`:''}
+<button class="btn" ${hard||!a.length?'disabled style="opacity:.5"':''} onclick="Q.TS.push({id:Date.now(),ti:Q.dr.ti,d:+Q.dr.d,t:Q.dr.t,du:+Q.dr.du,g:[...Q.dr.g],st:[...Q.dr.st],rec:Q.dr.rec,cx:[]});TOAST(tt('saved'))">${tt('save')}</button></div></div>`}
+function pMat(){const m=Q.mat,a=aud(m),U=m.up,ok=U==='done'&&a.length&&m.chk;
+const box={idle:`<p class="mut">PDF · Word · PowerPoint · image ≤ 100 Mo</p><button onclick="Q.mat.up='uploading';R()">${tt('up')}</button>`,uploading:`<p>${tt('up')}… Chapitre_5_Dynamique.pdf</p><div class="bar"><i style="width:62%"></i></div>`,rejected:`<div class="block">✕ ${tt('rej')}</div>`,failed:`<div class="block">✕ ${tt('fail')}</div><button onclick="Q.mat.up='done';R()">${tt('retry')}</button>`,done:`<p>${badge('approved','Chapitre_5_Dynamique.pdf')}</p>`}[U];
+return `<div class="two"><div class="card"><h2>${tt('mats')}</h2>${box}<div class="row mut" style="margin-top:10px;font-size:12px">${['idle','uploading','rejected','failed','done'].map(k=>`<button style="min-height:32px" aria-pressed="${U===k}" onclick="Q.mat.up='${k}';R()">${k}</button>`).join('')}</div></div>
+<div class="card">${pick(m,'Q.mat')}${sum(m)}${a.length?'':`<div class="warn">! ${tt('pubneed')}</div>`}<label class="chk"><input type="checkbox" ${m.chk?'checked':''} onchange="Q.mat.chk=this.checked;R()">${tt('chk')}</label><button class="btn" ${ok?'':'disabled style="opacity:.5"'} onclick="TOAST(tt('saved'))">${tt('pub')}</button></div></div>`}
+function pEx(){const e=Q.ex,a=aud(e),h=x=>e.ty.includes(x);
+return `<div class="two"><div class="card"><h2>${t('ex')}</h2><label>${tt('title')}</label><input lang="fr" value="${e.ti}" onchange="Q.ex.ti=this.value;R()"><label>${tt('instr')}</label><textarea lang="fr" onchange="Q.ex.in=this.value;R()">${e.in}</textarea>
+<label>${tt('deadline')}</label><input type="date" value="2026-11-02"><fieldset><legend><b>${tt('resp')}</b></legend>${['text','file','quiz'].map(k=>`<label class="chk"><input type="checkbox" ${h(k)?'checked':''} onchange="tg('Q.ex','ty','${k}')">${tt(k)}</label>`).join('')}</fieldset>
+${h('quiz')?`<fieldset><legend><b>${tt('quiz')}</b></legend>${e.qs.map((q,i)=>`<div><b lang="fr" dir="ltr">${i+1}. ${q}</b>${['Newton','Joule','Watt'].map((o,j)=>`<label class="chk"><input type="radio" name="q${i}" ${j===0?'checked':''}>${o}</label>`).join('')}</div>`).join('')}<button onclick="Q.ex.qs.push('Question '+(Q.ex.qs.length+1)+' ?');R()">+ ${tt('addq')}</button><label>${tt('attempts')}</label><select onchange="Q.ex.att=+this.value"><option>1</option><option>2</option><option>3</option></select></fieldset>`:''}
+${pick(e,'Q.ex')}${sum(e)}<button class="btn" ${a.length?'':'disabled style="opacity:.5"'} onclick="TOAST(tt('saved'))">${tt('pub')}</button></div>
+<div class="card"><b>${tt('prev')}</b><h2 lang="fr" dir="ltr" style="margin-top:8px">${e.ti}</h2><p class="mut">${tt('deadline')} : 02/11/2026</p><p lang="fr" dir="ltr">${e.in}</p>${h('text')?'<textarea></textarea>':''}${h('file')?`<p><button>${tt('up')}</button></p>`:''}${h('quiz')?`<div class="mixed" lang="fr" dir="ltr">${e.qs.length} question(s) · ${e.att} ${tt('attempts').toLowerCase()}</div>`:''}</div></div>`}
+function pGrad(){const gOf=x=>ST.find(y=>y[0]===x.s)[2],l=Q.sub.filter(x=>(Q.ef==='all'||x.ex===Q.ef)&&(Q.gf==='all'||gOf(x)==Q.gf)),c=Q.sub.find(x=>x.id===Q.sel),ex=[...new Set(Q.sub.map(x=>x.ex))];
+return `<div class="two"><div><h2>${tt('queue')}</h2><div class="filters"><select onchange="Q.ef=this.value;R()"><option value="all">${t('ex')} : ${t('all')}</option>${ex.map(x=>`<option ${Q.ef===x?'selected':''}>${x}</option>`).join('')}</select><select onchange="Q.gf=this.value;R()"><option value="all">${t('all')}</option>${[3,5].map(g=>`<option value="${g}" ${Q.gf==g?'selected':''}>${gn(g)}</option>`).join('')}</select></div>
+${l.length?l.map(x=>`<button class="card ${x.late?'lrow':''}" style="width:100%;text-align:start;margin-bottom:6px;display:block" aria-pressed="${Q.sel===x.id}" onclick="Q.sel=${x.id};R()"><b>${ST.find(y=>y[0]===x.s)[1]}</b> <span lang="fr" dir="ltr" class="mut">${x.ex}</span><div>${x.late?badge('late',t('late')+' · '+x.late+' h'):badge('upcoming',tt('wait'))}</div></button>`).join(''):`<div class="lock">✓ ${tt('empty')}</div>`}</div>
+<div class="card">${c?`<b>${ST.find(y=>y[0]===c.s)[1]}</b> ${c.late?badge('late',t('late')+' · '+c.late+' h'):''}<div class="mixed" lang="fr" dir="ltr">${c.ty==='file'?'📎 '+c.v:c.ty==='text'?c.v:tt('auto')+' : '+c.v+'/20'}</div><label>${tt('sc')}</label><input type="number" max="20" value="${c.ty==='quiz'?c.v:''}"><label>${tt('fb')}</label><textarea lang="fr"></textarea><p><button class="btn" onclick="Q.sub=Q.sub.filter(y=>y.id!=${c.id});Q.sel=null;TOAST(tt('saved'))">${tt('sv')}</button></p>`:`<div class="lock">${tt('queue')}</div>`}</div></div>`}
+function pAtt(){const x=Q.TS.find(y=>y.id===Q.as),a=aud(x),A=Q.at[x.id]=Q.at[x.id]||{};
+return `<select onchange="Q.as=+this.value;R()">${Q.TS.map(y=>`<option value="${y.id}" ${y.id===Q.as?'selected':''}>${t('days')[y.d]} ${y.t} · ${y.ti}</option>`).join('')}</select><div style="margin:10px 0"><button class="btn" onclick="aud(Q.TS.find(y=>y.id==${x.id})).forEach(z=>Q.at[${x.id}][z[0]]='pres');R()">${tt('allp')}</button></div>
+${a.map(z=>`<div class="card" style="margin-bottom:6px"><div class="row" style="justify-content:space-between;align-items:center"><span>${z[1]} ${x.g.includes(z[2])?'':badge('upcoming',tt('guest')+' · '+gn(z[2]))}</span><span class="row">${['pres','abs','lt','exc'].map(k=>`<button aria-pressed="${A[z[0]]===k}" onclick="Q.at[${x.id}][${z[0]}]='${k}';R()">${t(k)}</button>`).join('')}</span></div></div>`).join('')}`}
+function pStu(){return `<select onchange="Q.sg=+this.value;R()">${G.map(g=>`<option value="${g.id}" ${Q.sg===g.id?'selected':''}>${gn(g.id)}</option>`).join('')}</select><div class="grid c2" style="margin-top:10px">${mem(Q.sg).map(z=>`<div class="card"><div class="row" style="justify-content:space-between"><b>${z[1]}</b><span>${tt('avg')} ${z[0]===1?'14.5':(10+z[0]*1.3%8).toFixed(1)}/20 · ${tt('rate')} ${80+z[0]*2}%</span></div><div class="mixed" lang="fr" dir="ltr">Bon raisonnement, à justifier davantage.</div></div>`).join('')||`<div class="lock">—</div>`}</div>`}
+function teach(){const T=[['dash',tt('tdash')],['sess',t('sess')],['mat',tt('mats')],['ex',t('ex')],['grad',tt('grad')+' ('+Q.sub.length+')'],['att',t('att')],['stu',tt('studs')]];
+return `<div class="wrap tw" style="padding-block:16px"><div class="tabs">${T.map(x=>`<button aria-pressed="${Q.tab===x[0]}" onclick="Q.tab='${x[0]}';R()">${x[1]}</button>`).join('')}</div>${{dash:pDash,sess:pSess,mat:pMat,ex:pEx,grad:pGrad,att:pAtt,stu:pStu}[Q.tab]()}</div>`}
+
+const OTH=[{id:'x1',ti:'Anglais 2AS',d:1,t:'16:30',du:60,g:[3],st:[],by:'Mme Saidi'}];
+const KA='adm,dash,arq,acc,crs,sch,ann,set,hist,approve,reject,wait,exc,over,ovc,exwarn,enrq,leaveq,why,notif,nmA,nmR,nmW,newg,cap,tchr,tchrs,susp,react,act,inactive,preserved,cfd,cfr,rem,msg,send,confl,none,create,tog1,tog2,stuR,allu,onlyS,onlyT,reach,members,pendN,exN,pv,search,att,caught,hw,ha,hr,hd,langs,note1'.split(',');
+const VA={
+fr:`Administration|Aperçu|Demandes|Comptes|Cours et groupes|Planning global|Annonces|Réglages|Historique|Approuver|Refuser|Laisser en attente|Approuver en exception|Groupe complet : choisissez une option.|Je comprends que le groupe dépassera sa capacité|Le groupe passera à|Inscription|Départ|Motif (facultatif, visible par l'élève)|L'élève sera notifié (plateforme + e-mail) :|Votre demande a été approuvée.|Votre demande a été refusée.|Votre demande attend une place.|Nouveau cours / groupe|Capacité|Enseignant|Enseignants|Désactiver|Activer|Actif|Désactivé|Historique conservé : notes, présences et rendus ne sont pas supprimés.|Désactiver ce compte ? La personne ne pourra plus se connecter. Ses données restent conservées.|Retirer cet élève du groupe ? Il perdra l'accès aux séances et supports du groupe.|Retirer du groupe|Message|Publier|Conflit de planning : élèves concernés|Aucune demande.|Créer|Inscriptions ouvertes|E-mails de notification|Élève|Tous|Élèves seulement|Enseignants seulement|Environ|membres|en attente|exception|Aperçu du catalogue public|Rechercher|À traiter|Tout est à jour.|Qui|Action|Dossier|Quand|Langues de l'interface|Les enseignants sont créés uniquement ici ; les élèves peuvent s'inscrire seuls. Aucun compte administrateur ne se crée ici.`.split('|'),
+en:`Administration|Overview|Requests|Accounts|Courses & groups|Platform schedule|Announcements|Settings|History|Approve|Reject|Keep waiting|Approve as exception|Group is full: choose an option.|I understand the group will exceed its capacity|The group will become|Enrollment|Leave|Reason (optional, shown to student)|Student will be notified (platform + email):|Your request has been approved.|Your request has been rejected.|Your request is waiting for a place.|New course / group|Capacity|Teacher|Teachers|Deactivate|Activate|Active|Deactivated|Records preserved: grades, attendance and submissions are not deleted.|Deactivate this account? The person will no longer be able to sign in. Their data is kept.|Remove this student from the group? They lose access to the group's sessions and materials.|Remove from group|Message|Publish|Schedule conflict: affected students|No requests.|Create|Enrollment open|Notification emails|Student|Everyone|Students only|Teachers only|About|members|pending|exception|Public catalog preview|Search|Needs attention|All caught up.|Who|Action|Record|When|Interface languages|Teachers are created only here; students can self-register. No administrator account can be created here.`.split('|'),
+ar:`الإدارة|نظرة عامة|الطلبات|الحسابات|الدروس والأفواج|الجدول العام|الإعلانات|الإعدادات|السجل|قبول|رفض|إبقاء في الانتظار|قبول كاستثناء|الفوج مكتمل: اختر خيارًا.|أدرك أن الفوج سيتجاوز سعته|سيصبح الفوج|تسجيل|مغادرة|السبب (اختياري، يظهر للطالب)|سيُشعَر الطالب (المنصة + البريد):|تم قبول طلبك.|تم رفض طلبك.|طلبك ينتظر مقعدًا.|درس / فوج جديد|السعة|الأستاذ|الأساتذة|تعطيل|تفعيل|نشط|معطّل|السجلات محفوظة: النقاط والحضور والتسليمات لا تُحذف.|تعطيل هذا الحساب؟ لن يتمكن صاحبه من الدخول. بياناته محفوظة.|إزالة هذا الطالب من الفوج؟ سيفقد الوصول إلى حصص الفوج ووثائقه.|إزالة من الفوج|الرسالة|نشر|تعارض في الجدول: الطلاب المعنيون|لا طلبات.|إنشاء|التسجيل مفتوح|رسائل الإشعار بالبريد|طالب|الجميع|الطلاب فقط|الأساتذة فقط|حوالي|أعضاء|قيد الانتظار|استثناء|معاينة الكتالوج العام|بحث|يحتاج إلى معالجة|كل شيء محدّث.|من|الإجراء|السجل|متى|لغات الواجهة|يُنشأ الأساتذة هنا فقط، ويمكن للطلاب التسجيل بأنفسهم. لا يمكن إنشاء حساب مدير هنا.`.split('|')};
+const ta=k=>VA[s.lang][KA.indexOf(k)]||k;
+const now=()=>new Date().toLocaleString(s.lang==='ar'?'ar-DZ':s.lang,{dateStyle:'short',timeStyle:'short'});
+{const g=G.find(x=>x.id===4);g.cap=6;g.n=7}
+const A={tab:'dash',rt:'enr',sel:null,fs:'all',fc:'all',fg:'all',ex:{4:1},ex1:{},ok:{},cf:null,q:'',fr:'all',fst:'all',aa:'all',am:'',pv:1,rg:3,rm:{},on:[1,1],tc:{},
+an:[{a:'students',m:'Reprise des cours lundi 2 novembre.',d:'20/10/2026'}],
+rq:[{id:1,n:'Yasmine B.',g:1,k:'enr',s:'pending',d:'24/10/2026'},{id:2,n:'Karim D.',g:2,k:'enr',s:'pending',d:'25/10/2026'},{id:7,n:'Hiba Z.',g:2,k:'enr',s:'waiting',d:'22/10/2026'},{id:3,n:'Sara H.',g:5,k:'leave',s:'pending',d:'25/10/2026'},{id:4,n:'Nour A.',g:1,k:'enr',s:'approved',d:'20/10/2026'},{id:5,n:'Rym L.',g:4,k:'enr',s:'rejected',d:'19/10/2026',r:'Niveau non concerné.'},{id:6,n:'Omar S.',g:3,k:'enr',s:'rejected',d:'18/10/2026'}],
+us:[{n:'Yasmine B.',r:'s',on:1,e:'yasmine@example.dz'},{n:'Amine K.',r:'s',on:1,e:'amine@example.dz'},{n:'Lina M.',r:'s',on:1,e:'lina@example.dz'},{n:'Omar S.',r:'s',on:0,e:'omar@example.dz'},{n:'M. Benali',r:'t',on:1,e:'benali@example.dz'},{n:'Mme Saidi',r:'t',on:1,e:'saidi@example.dz'}],
+lg:[{a:'Approved enrollment',r:'Nour A. · Math 3AS',d:'20/10/2026 09:12'},{a:'Deactivated account',r:'Omar S.',d:'21/10/2026 14:40'},{a:'Rejected enrollment',r:'Rym L. · Phys 2AS',d:'19/10/2026 18:05'}]};
+const ask=(m,f)=>{A.cf={m,f};R()};const okc=()=>{const f=A.cf.f;A.cf=null;f()};
+const logA=(a,r)=>A.lg.unshift({a,r,d:now()});
+const capB=g=>`<div class="row" style="align-items:center"><span>${g.n}/${g.cap}</span><div class="bar" style="flex:1;min-width:50px"><i style="width:${Math.min(100,g.n/g.cap*100)}%"></i></div>${g.n>g.cap?badge('late',ta('exN')+' +'+(g.n-g.cap)):badge(st(g),t(st(g)))}</div>`;
+function dec(id,s2,ex){const r=A.rq.find(x=>x.id===id),g=G.find(x=>x.id===r.g),w=document.getElementById('why'),rs=w?w.value:'';r.s=s2;if(rs&&s2==='rejected')r.r=rs;
+if(s2==='approved'){g.n+=r.k==='enr'?1:-1;if(ex)A.ex[g.id]=(A.ex[g.id]||0)+1}
+logA(ex?'Approved over-capacity exception':s2+' '+r.k,r.n+' · '+gn(g.id));A.sel=null;A.ex1={};TOAST(t(s2==='waiting'?'pending':s2))}
+const pend=k=>A.rq.filter(x=>x.k===k&&(x.s==='pending'||x.s==='waiting')).length;
+function cfl(){const all=[...Q.TS.map(x=>({...x,by:'M. Benali'})),...OTH],o=[];all.forEach((x,i)=>all.slice(i+1).forEach(y=>{if(ov(x.d,x.t,x.du,y.d,y.t,y.du)){const ids=aud(x).filter(z=>aud(y).some(w=>w[0]===z[0]));o.push({x,y,ids,teach:x.by===y.by})}}));return {all,o:o.filter(c=>c.teach||c.ids.length)}}
+function aDash(){const c=cfl().o.length,B=(n,l,tab)=>`<button class="card" style="text-align:start" onclick="A.tab='${tab}';R()"><div class="t" style="font-size:30px;font-weight:600">${n}</div>${l} ${arr}</button>`;
+return `<div class="grid c3" style="margin-bottom:14px">${[[A.us.filter(u=>u.r==='s').length,tt('studs')],[A.us.filter(u=>u.r==='t').length,ta('tchrs')],[3,t('cat')],[G.length,tt('groups')]].map(x=>`<div class="card"><div style="font-size:26px;font-weight:600">${x[0]}</div><span class="mut">${x[1]}</span></div>`).join('')}</div>
+<h2>${ta('att')}</h2><div class="grid c3">${B(pend('enr'),ta('enrq'),'rq')}${B(pend('leave'),ta('leaveq'),'rq')}${B(c,ta('confl').split(':')[0],'sch')}</div>`}
+function aRq(){const gOf=x=>G.find(g=>g.id===x.g),l=A.rq.filter(x=>x.k===A.rt&&(A.fs==='all'||x.s===A.fs)&&(A.fc==='all'||gOf(x).c===A.fc)&&(A.fg==='all'||x.g==A.fg)),c=A.rq.find(x=>x.id===A.sel),g=c&&gOf(c);
+const nf=`<div class="mut" style="margin-top:10px">${ta('notif')}<br>✓ ${ta('nmA')}<br>✕ ${ta('nmR')}</div>`;
+let P=`<div class="lock">${ta('arq')}</div>`;
+if(c){const open=c.s==='pending'||c.s==='waiting',full=c.k==='enr'&&g.n>=g.cap;
+P=`<b>${c.n}</b> ${badge(c.s==='waiting'?'pending':c.s,c.s==='waiting'?ta('wait'):t(c.s))}<div class="mut">${ta(c.k==='enr'?'enrq':'leaveq')} · ${gn(g.id)} · ${c.d}</div><p>${capB(g)}</p>${A.ex[g.id]?`<div class="warn">! ${ta('exN')} ×${A.ex[g.id]}</div>`:''}`;
+if(!open)P+=c.r?`<div class="mixed" lang="fr" dir="ltr">${t('reason')} ${c.r}</div>`:'';
+else{P+=`<label>${ta('why')}</label><input id="why" lang="fr">`;
+if(full&&!A.ex1[c.id])P+=`<div class="warn" role="alert"><b>! ${ta('over')}</b></div><div class="grid"><button onclick="dec(${c.id},'rejected')">✕ ${ta('reject')}</button><button onclick="dec(${c.id},'waiting')">◔ ${ta('wait')}<br><small class="mut">${ta('nmW')}</small></button><button style="border:2px solid var(--no);color:var(--no)" onclick="A.ex1[${c.id}]=1;R()">⚠ ${ta('exc')}</button></div>`;
+else if(full)P+=`<div class="block" role="alert">⚠ ${ta('exwarn')} <b>${g.n+1}/${g.cap}</b></div><label class="chk"><input type="checkbox" ${A.ok[c.id]?'checked':''} onchange="A.ok[${c.id}]=this.checked;R()">${ta('ovc')}</label><div class="row"><button class="btn" ${A.ok[c.id]?'':'disabled style="opacity:.5"'} onclick="dec(${c.id},'approved',1)">${ta('exc')}</button><button onclick="A.ex1[${c.id}]=0;R()">${t('cancel')}</button></div>`;
+else P+=`<div class="row" style="margin-top:10px"><button class="btn" onclick="dec(${c.id},'approved')">${ta('approve')}</button><button onclick="dec(${c.id},'rejected')">${ta('reject')}</button></div>`;
+P+=nf}}
+const mm=mem(A.rg).filter(z=>!A.rm[z[0]]);
+return `<div class="row" style="margin-bottom:10px"><button aria-pressed="${A.rt==='enr'}" onclick="A.rt='enr';A.sel=null;R()">${ta('enrq')} (${pend('enr')})</button><button aria-pressed="${A.rt==='leave'}" onclick="A.rt='leave';A.sel=null;R()">${ta('leaveq')} (${pend('leave')})</button></div>
+<div class="filters"><select onchange="A.fs=this.value;R()">${['all','pending','waiting','approved','rejected'].map(k=>`<option value="${k}" ${A.fs===k?'selected':''}>${k==='all'?t('all'):k==='waiting'?ta('wait'):t(k)}</option>`).join('')}</select><select onchange="A.fc=this.value;R()"><option value="all">${t('all')}</option>${['Math','Phys','Fr'].map(k=>`<option value="${k}" ${A.fc===k?'selected':''}>${t(k)}</option>`).join('')}</select><select onchange="A.fg=this.value;R()"><option value="all">${t('all')}</option>${G.map(x=>`<option value="${x.id}" ${A.fg==x.id?'selected':''}>${gn(x.id)}</option>`).join('')}</select></div>
+<div class="two"><div>${l.map(x=>`<button class="card" style="width:100%;text-align:start;margin-bottom:6px;display:block" aria-pressed="${A.sel===x.id}" onclick="A.sel=${x.id};R()"><div class="row" style="justify-content:space-between"><b>${x.n}</b>${badge(x.s==='waiting'?'pending':x.s,x.s==='waiting'?ta('wait'):t(x.s))}</div><div class="mut">${gn(x.g)} · ${x.d}</div>${capB(G.find(g=>g.id===x.g))}</button>`).join('')||`<div class="lock">✓ ${ta('caught')}</div>`}</div><div class="card">${P}</div></div>
+${A.rt==='leave'?`<h2 style="margin-top:20px">${ta('rem')}</h2><select onchange="A.rg=+this.value;R()">${G.map(x=>`<option value="${x.id}" ${A.rg===x.id?'selected':''}>${gn(x.id)}</option>`).join('')}</select>${mm.map(z=>`<div class="card row" style="justify-content:space-between;align-items:center;margin-top:6px"><span>${z[1]}</span><button onclick="ask(ta('cfr'),()=>{A.rm[${z[0]}]=1;G.find(g=>g.id==${A.rg}).n--;logA('Removed from group','${z[1]} · '+gn(${A.rg}));TOAST(ta('rem'))})">${ta('rem')}</button></div>`).join('')}`:''}`}
+function aAcc(){const us=A.us.filter(u=>(A.fr==='all'||u.r===A.fr)&&(A.fst==='all'||(A.fst==='on')===!!u.on)&&u.n.toLowerCase().includes(A.q.toLowerCase()));
+return `<div class="two"><div><div class="filters"><input style="max-width:200px" placeholder="${ta('search')}" value="${A.q}" onchange="A.q=this.value;R()"><select onchange="A.fr=this.value;R()"><option value="all">${t('all')}</option><option value="s" ${A.fr==='s'?'selected':''}>${ta('stuR')}</option><option value="t" ${A.fr==='t'?'selected':''}>${ta('tchr')}</option></select><select onchange="A.fst=this.value;R()"><option value="all">${t('all')}</option><option value="on" ${A.fst==='on'?'selected':''}>${ta('act')}</option><option value="off" ${A.fst==='off'?'selected':''}>${ta('inactive')}</option></select></div>
+${us.map(u=>`<div class="card" style="margin-bottom:6px;${u.on?'':'opacity:.75;border-style:dashed'}"><div class="row" style="justify-content:space-between"><b>${u.n}</b><span>${badge('upcoming',u.r==='t'?ta('tchr'):ta('stuR'))} ${u.on?badge('approved',ta('act')):badge('rejected','⊘ '+ta('inactive'))}</span></div><div class="mut">${u.e}</div>${u.on?'':`<div class="mut">🗂 ${ta('preserved')}</div>`}<button style="margin-top:6px" onclick="${u.on?`ask(ta('cfd'),()=>{A.us[${A.us.indexOf(u)}].on=0;logA('Deactivated account','${u.n}');TOAST(ta('inactive'))})`:`A.us[${A.us.indexOf(u)}].on=1;logA('Activated account','${u.n}');R()`}">${u.on?ta('susp'):ta('react')}</button></div>`).join('')}</div>
+<div class="card"><h2>${ta('create')}</h2><label>${t('name')}</label><input id="un"><label>${t('email')}</label><input id="ue" type="email"><label>${tt('role')}</label><select id="ur"><option value="s">${ta('stuR')}</option><option value="t">${ta('tchr')}</option></select><p class="mut">${ta('note1')}</p><button class="btn" onclick="A.us.push({n:un.value||'—',r:ur.value,on:1,e:ue.value});logA('Created account',un.value);TOAST(ta('create'))">${ta('create')}</button></div></div>`}
+function aCrs(){const C=[['Math','3AS',[1,2],'Suites, limites, dérivation, probabilités',4500],['Phys','2AS',[3,4],'Mécanique, ondes, électricité',4000],['Fr','1AS',[5],'Expression écrite et grammaire',3500]];
+return `<div class="two"><div>${C.map(c=>`<div class="card" style="margin-bottom:10px"><b>${t(c[0])} ${c[1]}</b> <span class="gold">${c[4]} DA</span><div class="mixed" lang="fr" dir="ltr">${c[3]}</div>${c[2].map(i=>{const g=G.find(x=>x.id===i);return `<div style="border-top:1px solid var(--line);padding:8px 0"><div>${g.type==='part'?'★ ':''}${t(g.type==='part'?'part':'regular')} · ${g.days.map(d=>t('days')[d]).join('/')} ${g.t}</div>${capB(g)}<div class="mut">${g.n} ${ta('members')} · ${A.rq.filter(r=>r.g===i&&(r.s==='pending'||r.s==='waiting')).length} ${ta('pendN')}${A.ex[i]?' · '+ta('exN')+' ×'+A.ex[i]:''}</div><div class="row"><select style="flex:1" aria-label="${ta('tchr')}" onchange="A.tc[${i}]=this.value"><option>M. Benali</option><option ${A.tc[i]==='Mme Saidi'?'selected':''}>Mme Saidi</option></select><button onclick="A.pv=${i};R()">${ta('pv')}</button></div></div>`}).join('')}</div>`).join('')}</div>
+<div><div class="card"><b>${ta('pv')}</b><div style="pointer-events:none;margin-top:8px">${gcard(G.find(x=>x.id===A.pv))}</div></div><div class="card" style="margin-top:12px"><h2>${ta('newg')}</h2><label>${t('sub')}</label><select id="nc">${['Math','Phys','Fr'].map(k=>`<option value="${k}">${t(k)}</option>`).join('')}</select><label>${t('lvl')}</label><select id="nl"><option>1AS</option><option>2AS</option><option>3AS</option></select><label>${tt('instr')}</label><input lang="fr"><label>${t('fees')} (DA)</label><input type="number" id="nf" value="4000"><label>${t('regular')} / ${t('part')}</label><select id="nt"><option value="regular">${t('regular')}</option><option value="part">${t('part')}</option></select><label>${ta('cap')}</label><input type="number" id="ncap" value="20"><p><button class="btn" onclick="G.push({id:Date.now()%1e6,c:nc.value,lv:nl.value,type:nt.value,days:[3],t:'18:00',fee:+nf.value,cap:+ncap.value,n:0});logA('Created group',nc.value+' '+nl.value);TOAST(ta('create'))">${ta('create')}</button></p></div></div></div>`}
+function aSch(){const {all,o}=cfl();
+return `<div class="cal">${t('days').map((d,i)=>`<div class="card"><b>${d}</b>${all.filter(x=>x.d===i).sort((a,b)=>mn(a.t)-mn(b.t)).map(x=>`<div class="chip" style="display:block;border-radius:8px;margin-top:4px"><span lang="fr" dir="ltr">${x.t} ${x.ti}</span><br><span class="mut">${x.by}</span></div>`).join('')}</div>`).join('')}</div>
+<div style="margin-top:14px">${o.map(c=>c.teach?`<div class="block">✕ ${c.x.by} : ${c.x.ti} ↔ ${c.y.ti}</div>`:`<div class="warn" role="status"><b>! ${ta('confl')}</b><br><span lang="fr" dir="ltr">${c.x.ti} ↔ ${c.y.ti}</span><br>${c.ids.map(z=>`<span class="chip">${z[1]}</span>`).join('')}</div>`).join('')}</div>`}
+function aAnn(){const n=A.us.filter(u=>u.on&&(A.aa==='all'||(A.aa==='students')===(u.r==='s'))).length,pub=()=>{A.an.unshift({a:A.aa,m:A.am||'…',d:now().split(',')[0]});logA('Published announcement',A.aa);TOAST(tt('saved'))};window.pubA=pub;
+return `<div class="two"><div class="card"><label>${tt('who')}</label>${[['all',ta('allu')],['students',ta('onlyS')],['teachers',ta('onlyT')]].map(x=>`<label class="chk"><input type="radio" name="aa" ${A.aa===x[0]?'checked':''} onchange="A.aa='${x[0]}';R()">${x[1]}</label>`).join('')}
+<div class="sum"><b>${tt('aud')} : ${A.aa==='all'?ta('allu'):A.aa==='students'?ta('onlyS'):ta('onlyT')}</b><div>${ta('reach')} ${n}</div></div><label>${ta('msg')}</label><textarea lang="fr" onchange="A.am=this.value"></textarea><p><button class="btn" onclick="${'A.aa===\'all\'?ask(ta(\'allu\')+\' (\'+'+n+'+\')\',pubA):pubA()'}">${ta('send')}</button></p></div>
+<div>${A.an.map(a=>`<div class="card" style="margin-bottom:6px"><span class="chip">${a.a==='all'?ta('allu'):a.a==='students'?ta('onlyS'):ta('onlyT')}</span> <span class="mut">${a.d}</span><div lang="fr" dir="ltr">${a.m}</div></div>`).join('')}</div></div>`}
+const aSet=()=>`<div class="card"><b>${ta('langs')}</b><div>${['العربية','Français','English'].map(x=>`<span class="chip">${x}</span>`).join('')}</div>${['tog1','tog2'].map((k,i)=>`<label class="chk"><input type="checkbox" ${A.on[i]?'checked':''} onchange="A.on[${i}]=this.checked?1:0">${ta(k)}</label>`).join('')}</div>`;
+const aHist=()=>`<div class="card" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;text-align:start"><tr class="mut">${['hw','ha','hr','hd'].map(k=>`<th style="text-align:start;padding:6px">${ta(k)}</th>`).join('')}</tr>${A.lg.map(l=>`<tr style="border-top:1px solid var(--line)"><td style="padding:6px">Admin</td><td style="padding:6px">${l.a}</td><td style="padding:6px" lang="fr" dir="ltr">${l.r}</td><td style="padding:6px">${l.d}</td></tr>`).join('')}</table></div>`;
+function admin(){const T=[['dash',ta('dash')],['rq',ta('arq')+' ('+(pend('enr')+pend('leave'))+')'],['acc',ta('acc')],['crs',ta('crs')],['sch',ta('sch')],['ann',ta('ann')],['set',ta('set')],['hist',ta('hist')]];
+return `<div class="wrap tw" style="padding-block:16px"><div class="tabs">${T.map(x=>`<button aria-pressed="${A.tab===x[0]}" onclick="A.tab='${x[0]}';A.cf=null;R()">${x[1]}</button>`).join('')}</div>${A.cf?`<div class="card" style="border:2px solid var(--gold);margin-bottom:12px"><p>${A.cf.m}</p><div class="row"><button class="btn" onclick="okc()">${tt('confirm')}</button><button onclick="A.cf=null;R()">${t('cancel')}</button></div></div>`:''}${{dash:aDash,rq:aRq,acc:aAcc,crs:aCrs,sch:aSch,ann:aAnn,set:aSet,hist:aHist}[A.tab]()}</div>`}
+document.head.insertAdjacentHTML('beforeend','<style>.cal{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.tw button.card[aria-pressed=true]{border-color:var(--gold);background:var(--card);color:var(--ink);box-shadow:inset 4px 0 0 var(--gold)}</style>');
+
+R();
+</script>
+</body>
+</html>
